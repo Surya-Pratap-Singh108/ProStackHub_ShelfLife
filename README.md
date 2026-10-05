@@ -1,98 +1,256 @@
 # ShelfLife
 
-A personal book tracking application built for the **ProStackHub Full Stack Development Internship — Task 1**.
+A full-stack personal book tracking application built for the **ProStackHub Full Stack Development Internship — Task 1**.
+
+ShelfLife allows users to search for books, add them to their personal shelf, track reading progress, and manage their reading status.
+
+## Live Demo
+
+**Frontend:**  
+https://pro-stack-hub-shelf-life-opal.vercel.app/
+
+**Backend:**  
+https://prostackhub-shelflife-ie8f.onrender.com
 
 ## Features
 
-- JWT-based user authentication (register, login)
-- Search books via the Google Books API (auto-fills title, author, cover, ISBN)
-- Add books to your personal shelf
-- Track reading status: **Want to Read**, **Reading**, **Read**
-- Reading progress bar (current page / total pages)
-- Give a personal rating (1–5 stars) for finished books
-- Write a review for finished books
-- Protected routes — each user can only see and edit their own shelf
+- JWT-based user authentication
+- User registration and login
+- Search books using the Google Books API
+- Automatically fetch book title, author, cover, ISBN, and page count
+- Add books to a personal shelf
+- Track reading status:
+  - Want to Read
+  - Reading
+  - Read
+- Track reading progress
+- Add a 1–5 star rating
+- Write a personal review
+- Protected routes
+- User-specific shelves
+- Users can only view and modify their own books
 
 ## Tech Stack
 
-| Layer     | Technology                                |
-|-----------|-------------------------------------------|
-| Frontend  | React, Vite, React Router, Axios, Plain CSS |
-| Backend   | Node.js, Express, MongoDB, Mongoose       |
-| Auth      | JWT, bcryptjs                             |
-| External  | Google Books API                          |
+| Layer | Technology |
+|---|---|
+| Frontend | React, Vite, React Router, Axios, CSS |
+| Backend | Node.js, Express.js |
+| Database | MongoDB, Mongoose |
+| Authentication | JWT, bcryptjs |
+| External API | Google Books API |
+| Deployment | Vercel, Render |
 
-## Setup
+## Project Structure
+
+```text
+ShelfLife/
+│
+├── backend/
+│   ├── config/
+│   │   └── db.js
+│   ├── controllers/
+│   │   ├── authController.js
+│   │   ├── booksController.js
+│   │   └── shelfController.js
+│   ├── middleware/
+│   │   └── auth.js
+│   ├── models/
+│   │   ├── User.js
+│   │   └── ShelfBook.js
+│   ├── routes/
+│   │   ├── auth.js
+│   │   ├── books.js
+│   │   └── shelf.js
+│   ├── .env
+│   └── server.js
+│
+└── frontend/
+    └── src/
+        ├── api/
+        │   └── axios.js
+        ├── components/
+        │   ├── Navbar.jsx
+        │   └── ProtectedRoute.jsx
+        ├── context/
+        │   └── AuthContext.jsx
+        ├── pages/
+        │   ├── Login.jsx
+        │   ├── Register.jsx
+        │   ├── MyShelf.jsx
+        │   ├── SearchBooks.jsx
+        │   └── BookDetail.jsx
+        ├── App.jsx
+        ├── main.jsx
+        └── index.css
+```
+
+## Local Setup
 
 ### Prerequisites
 
-- Node.js ≥ 18
-- MongoDB running locally on port 27017
+- Node.js 18 or higher
+- MongoDB
+- Google Books API key
 
-### Backend
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/Surya-Pratap-Singh108/ProStackHub_ShelfLife.git
+cd ProStackHub_ShelfLife
+```
+
+### 2. Backend Setup
 
 ```bash
 cd backend
 npm install
-# Edit .env — set MONGO_URI and JWT_SECRET
+```
+
+Create a `.env` file inside the `backend` folder:
+
+```env
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+GOOGLE_BOOKS_API_KEY=your_google_books_api_key
+```
+
+Start the backend:
+
+```bash
 npm start
 ```
 
-### Frontend
+The backend will run on:
+
+```text
+http://localhost:5000
+```
+
+### 3. Frontend Setup
+
+Open another terminal:
 
 ```bash
 cd frontend
 npm install
-npm run dev
 ```
 
-The frontend runs on `http://localhost:5173` and the backend on `http://localhost:5000`.
+Create a `.env` file inside the `frontend` folder:
 
-## API Endpoints
-
-### Auth
-
-| Method | Endpoint               | Description         |
-|--------|------------------------|---------------------|
-| POST   | /api/auth/register     | Register new user   |
-| POST   | /api/auth/login        | Login, returns JWT  |
-
-### Books
-
-| Method | Endpoint               | Description                        |
-|--------|------------------------|------------------------------------|
-| GET    | /api/books/search?q=   | Search Google Books (protected)    |
-
-### Shelf (all protected)
-
-| Method | Endpoint         | Description                        |
-|--------|------------------|------------------------------------|
-| POST   | /api/shelf       | Add book to shelf                  |
-| GET    | /api/shelf       | Get authenticated user's shelf     |
-| GET    | /api/shelf/:id   | Get single shelf book              |
-| PATCH  | /api/shelf/:id   | Update status, progress, rating    |
-| DELETE | /api/shelf/:id   | Remove book from shelf             |
-
-## Environment Variables
-
-### Backend (`backend/.env`)
-
-```
-PORT=5000
-MONGO_URI=mongodb://localhost:27017/shelflife
-JWT_SECRET=your_secret_here
-GOOGLE_BOOKS_API_KEY=   # optional, increases API quota
-```
-
-### Frontend (`frontend/.env`)
-
-```
+```env
 VITE_API_URL=http://localhost:5000/api
 ```
 
+Start the frontend:
+
+```bash
+npm run dev
+```
+
+The frontend will run on:
+
+```text
+http://localhost:5173
+```
+
+## API Endpoints
+
+### Authentication
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/auth/register` | Register a new user |
+| POST | `/api/auth/login` | Login and receive JWT |
+
+### Books
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/books/search?q=` | Search books using Google Books API |
+
+### Shelf
+
+All shelf endpoints require authentication.
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/shelf` | Add a book to the shelf |
+| GET | `/api/shelf` | Get the authenticated user's shelf |
+| GET | `/api/shelf/:id` | Get a single shelf book |
+| PATCH | `/api/shelf/:id` | Update status, progress, rating, or review |
+| DELETE | `/api/shelf/:id` | Remove a book from the shelf |
+
+## Authentication & Authorization
+
+ShelfLife uses **JWT authentication** to protect user-specific resources.
+
+After login, the server provides a JWT containing the authenticated user's identity.
+
+Protected routes verify the token before allowing access to shelf operations.
+
+Each shelf book is associated with its owner, ensuring that users can only access and modify their own books.
+
+## Environment Variables
+
+### Backend
+
+```env
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+GOOGLE_BOOKS_API_KEY=your_google_books_api_key
+```
+
+### Frontend
+
+```env
+VITE_API_URL=http://localhost:5000/api
+```
+
+For production, the frontend uses the deployed backend URL.
+
 ## Deployment
 
-1. Deploy the backend to any Node.js host (Render, Railway, etc.)
-2. Set environment variables on the host
-3. Build and deploy the frontend (`npm run build`) to Vercel or Netlify
-4. Update `VITE_API_URL` to your hosted backend URL before building
+### Backend
+
+The backend is deployed using **Render**.
+
+https://prostackhub-shelflife-ie8f.onrender.com
+
+### Frontend
+
+The frontend is deployed using **Vercel**.
+
+https://pro-stack-hub-shelf-life-opal.vercel.app/
+
+The production frontend communicates with the deployed backend through the `VITE_API_URL` environment variable.
+
+## Security
+
+- Passwords are hashed using bcryptjs.
+- Authentication is handled using JWT.
+- Protected API routes require authentication.
+- Users cannot access other users' shelves.
+- Sensitive environment variables are stored in `.env` and should not be committed to the repository.
+
+## Future Improvements
+
+Some possible improvements include:
+
+- Pagination for book search
+- Book categories and filters
+- Reading goals and statistics
+- Dark mode
+- Better book recommendations
+- Social features for sharing shelves
+
+## Author
+
+**Surya Pratap Singh**
+
+B.Tech Computer Science Engineering
+
+GitHub:  
+https://github.com/Surya-Pratap-Singh108
